@@ -57,7 +57,7 @@ public class SiteMapBuilder {
     }
     
     private static boolean isValidLink(String link) {
-    	if (link == null)
+    	if (link == null || link == "")
     		return false;
     	else {
     		if (link.startsWith("#")) // if link is an internal link
