@@ -60,7 +60,7 @@ public class SiteMapBuilder {
     	if (link == null)
     		return false;
     	else {
-    		if (link.startsWith("#"))
+    		if (link.startsWith("#")) // if link is an internal link
     			return false;
     		else return true; // if not one of the exceptions, return true
     	}
