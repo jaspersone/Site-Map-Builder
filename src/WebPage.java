@@ -1,9 +1,9 @@
 import java.util.HashSet;
 
 public class WebPage {
-	String url;
-	double linkRank;
-	HashSet<WebPage> children;
+	private String url;
+	private double linkRank;
+	private HashSet<WebPage> children;
 	
 	public WebPage () {
 		url = "";
