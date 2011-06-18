@@ -14,13 +14,13 @@ public class SiteMapBuilder {
 		Scanner s = new Scanner(System.in);
 		System.out.println("Enter a web site URL:");
 
-		String webSite = s.next(); 
-		
+		String webSite = s.next();
 		SiteMapBuilder site = new SiteMapBuilder(webSite);
 		site.printMap();
 	}
-
+	
 	public SiteMapBuilder(String webSite) {
+		webSite = formatWebSiteURI(webSite);
 		root = new WebPage(webSite);
 		body = fetchBody(root.getURL());
 
@@ -38,6 +38,14 @@ public class SiteMapBuilder {
 		System.out.println("There are " + linkCount + " links found on " + root + ":");
 	}
 
+	private String formatWebSiteURI (String address) {
+		if (address.startsWith("http")) {
+			return address;
+		} else {
+			return "http://" + address;
+		}
+	}
+	
 	private void printMap() {
 		for (WebPage page : links) {
 			System.out.println(page);

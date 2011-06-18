@@ -5,8 +5,8 @@ import java.net.URLEncoder;
 import java.util.HashSet;
 
 public class WebPage {
+	private String rawURI; // stores original string passed to WebPage
 	private URI myURI;
-	private String rawURI;
 	private double linkRank;
 	private HashSet<WebPage> children;
 
@@ -15,7 +15,7 @@ public class WebPage {
 		try {
 			myURI = new URI(address);
 		} catch (URISyntaxException e) {
-			try {
+			try { // clean up links that are not properly URL encoded.
 				myURI = new URI(URLEncoder.encode(address, "UTF-8"));
 			} catch (UnsupportedEncodingException e1) {
 				// TODO Auto-generated catch block
