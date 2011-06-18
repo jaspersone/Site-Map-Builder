@@ -1,7 +1,7 @@
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.URL;
-import java.lang.StringBuffer;
+import java.lang.StringBuilder;
 import java.util.HashSet;
 import java.util.Scanner;
 
@@ -13,26 +13,39 @@ public class SiteMapBuilder {
 	public static void main(String[] abc) {
 		Scanner s = new Scanner(System.in);
 		System.out.println("Enter a web site URL:");
-		
+
 		String webSite = s.next(); 
 		
 		SiteMapBuilder site = new SiteMapBuilder(webSite);
+		site.printMap();
 	}
-	
+
 	public SiteMapBuilder(String webSite) {
-		root = new WebPage("http://www.yelp.com");
+		root = new WebPage(webSite);
 		body = fetchBody(root.getURL());
-		
+
 		int bodyLocation = body.indexOf("<body");
-		body = body.substring(bodyLocation);
-		
+
+		try {
+			body = body.substring(bodyLocation);
+		} catch (StringIndexOutOfBoundsException ob) {
+			System.out.println("Could not find <body>");
+			body = body.substring(0);
+		}
+
 		links = getLinks(body);
 		int linkCount = links.size();
 		System.out.println("There are " + linkCount + " links found on " + root + ":");
 	}
 
+	private void printMap() {
+		for (WebPage page : links) {
+			System.out.println(page);
+		}
+	}
+	
 	private String fetchBody(String urlStr) {
-		StringBuffer sb = new StringBuffer();
+		StringBuilder sb = new StringBuilder();
 		try {
 			URL url = new URL(urlStr);
 			InputStreamReader isr = new InputStreamReader(url.openStream());
@@ -41,7 +54,8 @@ public class SiteMapBuilder {
 			while((c = reader.read()) != -1)
 				sb.append((char)c);
 			reader.close();
-		}catch(Exception exe) {
+		} catch(Exception exe) {
+			System.out.println("This is the URL string that broke the internet: \n" + urlStr);
 			System.out.println("Internet is broken");
 		}
 		return sb.toString();
@@ -55,12 +69,12 @@ public class SiteMapBuilder {
 	private static HashSet<WebPage> getLinksHelper(String page, HashSet<WebPage> result) {
 		String searchTerm = "href=";
 		if (page == "" || page.indexOf(searchTerm) == -1) {
-			return result;
+			return result; // if page is empty or 'searchTerm' is not found in page
 		} else {
 			int searchTermLength = searchTerm.length();
 			int startLocation = page.indexOf(searchTerm) + searchTermLength + 1; 
 			String quoteMark = page.substring(startLocation - 1, startLocation); // grabs the correct quote mark (single or double)
-			int endLocation = page.indexOf(quoteMark, startLocation);
+			int endLocation = page.indexOf(quoteMark, startLocation); // searches for index of next matching closing quote
 			String linkCandidate = page.substring(startLocation, endLocation); 
 			if (isValidLink(linkCandidate))
 				result.add(new WebPage(linkCandidate));
