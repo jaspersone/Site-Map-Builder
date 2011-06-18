@@ -15,7 +15,6 @@ public class WebPage {
 		try {
 			myURI = new URI(address);
 		} catch (URISyntaxException e) {
-			System.out.println("Error on: " + address);
 			try {
 				myURI = new URI(URLEncoder.encode(address, "UTF-8"));
 			} catch (UnsupportedEncodingException e1) {
@@ -25,7 +24,8 @@ public class WebPage {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
-			
+			System.out.println("Error on:     " + rawURI);
+			System.out.println("Converted to: " + myURI);
 		}
 		linkRank = 0;
 		children = new HashSet<WebPage>();
@@ -39,14 +39,13 @@ public class WebPage {
 		return myURI.hashCode();
 	}
 	public boolean equals(Object other) {
-		if (other instanceof WebPage && myURI.equals(((WebPage) other).getURL())) {
+		if (other instanceof WebPage && this.getURL().equals(((WebPage) other).getURL())) {
 			return true;
 		} else
 			return false;
 	}
 	public String toString() {
-		return rawURI;
-		//return myURI.toString();
+		return myURI.toString();
 	}
 	
 }
